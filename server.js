@@ -23,7 +23,7 @@ if (!fs.existsSync(ORDERS_FILE)) writeJson(ORDERS_FILE, []);
 const sessions = new Map();
 const ADMIN_NUMBER = process.env.ADMIN_NUMBER || "01918444462";
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "sanjidacollection";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Sanjida@123";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "5566";
 
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true, limit: "25mb" }));
@@ -46,6 +46,8 @@ app.post("/api/admin/login", (req, res) => {
   sessions.set(token, Date.now());
   res.json({ ok: true, token });
 });
+
+app.get("/health", (req, res) => res.json({ ok: true, service: "premium-collection-by-sanjida" }));
 
 app.get("/api/products", (req, res) => {
   res.json(readJson(PRODUCTS_FILE, []));
@@ -81,9 +83,9 @@ app.put("/api/products/:id", auth, (req, res) => {
     ...products[i],
     name: String(b.name ?? products[i].name).trim(),
     group: b.group === "cosmetics" ? "cosmetics" : (b.group || products[i].group),
-    subcategory: String(b.subcategory ?? products[i].subcategory || ""),
+    subcategory: String(b.subcategory ?? products[i].subcategory ?? ""),
     price: Number(b.price ?? products[i].price ?? 0),
-    description: String(b.description ?? products[i].description || ""),
+    description: String(b.description ?? products[i].description ?? ""),
     images: Array.isArray(b.images) ? b.images : (products[i].images || []),
     active: b.active !== false,
     updatedAt: new Date().toISOString()

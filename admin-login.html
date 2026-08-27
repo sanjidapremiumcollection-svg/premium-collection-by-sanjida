@@ -23,7 +23,20 @@ img,video{max-width:100%;height:auto}
   input,select,textarea{font-size:16px!important}
   table{display:block;overflow-x:auto}
 }
-</style></head><body><div class="wrap"><section class="left"><div class="brand">PREMIUM COLLECTION<span>BY SANJIDA</span></div><div class="hero"><div class="eyebrow">PRIVATE ADMINISTRATION</div><h1>Welcome<br>behind the collection.</h1><p>Manage your products, orders and storefront from a private professional workspace.</p></div><div class="secure">SECURE ADMIN ACCESS · 2026</div></section><main class="right"><div class="card"><h2>Admin Access</h2><div class="sub">Enter all three credentials to continue</div><div class="line"></div><label>Phone Number</label><input id="number" inputmode="tel" placeholder="01918444462"><label>Username</label><input id="username" placeholder="sanjidacollection"><label>Password</label><input id="password" type="password" placeholder="••••"><button class="enter" id="btn" onclick="login()">ENTER ADMIN PANEL</button><div id="error" class="error"></div><a class="back" href="/">← Return to collection</a></div></main></div>
+</style><style>
+@media(max-width:520px){
+  .left{min-height:300px;padding:24px 20px}
+  .left .brand{font-size:23px}
+  .hero h1{font-size:48px;line-height:.95}
+  .hero p{font-size:13px;line-height:1.7}
+  .right{padding:12px}
+  .card{padding:24px 18px;border-radius:18px}
+  .card h2{font-size:31px}
+  .enter{min-height:48px}
+  input{min-height:46px}
+}
+</style>
+</head><body><div class="wrap"><section class="left"><div class="brand">PREMIUM COLLECTION<span>BY SANJIDA</span></div><div class="hero"><div class="eyebrow">PRIVATE ADMINISTRATION</div><h1>Welcome<br>behind the collection.</h1><p>Manage your products, orders and storefront from a private professional workspace.</p></div><div class="secure">SECURE ADMIN ACCESS · 2026</div></section><main class="right"><div class="card"><h2>Admin Access</h2><div class="sub">Enter all three credentials to continue</div><div class="line"></div><label>Phone Number</label><input id="number" inputmode="tel" placeholder="01918444462"><label>Username</label><input id="username" placeholder="sanjidacollection"><label>Password</label><input id="password" type="password" placeholder="••••"><button class="enter" id="btn" onclick="login()">ENTER ADMIN PANEL</button><div id="error" class="error"></div><a class="back" href="/">← Return to collection</a></div></main></div>
 <script>
 async function login(){const btn=document.getElementById('btn'),err=document.getElementById('error');btn.disabled=true;btn.textContent='VERIFYING...';err.textContent='';
 try{const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({number:number.value.trim(),username:username.value.trim(),password:password.value})});const d=await r.json();if(!r.ok)throw new Error(d.message||'Invalid credentials');sessionStorage.setItem('pcs_admin_token',d.token);location.href='/admin/dashboard'}catch(e){err.textContent=e.message}finally{btn.disabled=false;btn.textContent='ENTER ADMIN PANEL'}}

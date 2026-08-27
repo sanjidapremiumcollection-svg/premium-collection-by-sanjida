@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: premium-collection-by-sanjida
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start

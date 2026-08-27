@@ -1,0 +1,25 @@
+PREMIUM COLLECTION BY SANJIDA — RENDER SETUP
+
+This package is a Node/Express Web Service. It includes the customer website AND the private admin dashboard.
+
+RENDER SETTINGS
+Build Command: npm install
+Start Command: npm start
+Branch: main
+Root Directory: leave empty
+
+ADMIN LOGIN
+Phone: 01918444462
+Username: sanjidacollection
+Password: 5566
+
+ADMIN URL
+https://YOUR-SERVICE.onrender.com/admin
+
+CUSTOMER WEBSITE
+https://YOUR-SERVICE.onrender.com/
+
+IMPORTANT
+Use a Render Web Service, not a Static Site. The admin dashboard and product/order API need the Node server.
+
+The customer website keeps the existing design, with an improved mobile header, product layout, footer spacing, and touch-friendly controls.

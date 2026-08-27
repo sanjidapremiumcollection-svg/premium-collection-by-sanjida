@@ -23,7 +23,39 @@ img,video{max-width:100%;height:auto}
   input,select,textarea{font-size:16px!important}
   table{display:block;overflow-x:auto}
 }
-</style></head><body>
+</style><style>
+/* FINAL ADMIN MOBILE POLISH */
+html,body{max-width:100%;overflow-x:hidden}.side{z-index:20}.main{width:auto}
+@media(max-width:950px){
+  .side{position:sticky;top:0;width:100%;padding:14px 12px;z-index:50}
+  .brand{padding:4px 8px 12px;font-size:23px}
+  .nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+  .nav button{min-width:max-content;width:auto;margin:0;padding:10px 12px;text-align:center}
+  .main{margin:0;padding:14px}
+  .grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .side{padding:10px}
+  .brand{font-size:21px;padding-bottom:9px}
+  .brand small{font-size:7px}
+  .main{padding:10px}
+  .top{gap:8px;margin-bottom:14px}
+  .top h1{font-size:32px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .stat{padding:14px}.stat strong{font-size:27px}
+  .panel{padding:14px;border-radius:11px}
+  .toolbar{display:grid;grid-template-columns:1fr;gap:8px}
+  .toolbar input{max-width:none}
+  .tablewrap{margin:0 -2px;padding-bottom:4px}
+  .table{min-width:720px}
+  .actions{flex-wrap:wrap}
+  .actions .btn,.order-actions .btn{padding:10px 11px}
+  .order-top{align-items:flex-start}.order-actions{gap:6px}
+  .pc-contact-buttons{right:8px;bottom:8px}
+}
+</style>
+</head><body>
 <aside class="side"><div class="brand">PREMIUM COLLECTION<small>BY SANJIDA · ADMIN</small></div><div class="nav"><button class="active" onclick="tab('dashboard',this)">Overview</button><button onclick="tab('products',this)">Products</button><button onclick="tab('orders',this)">Orders</button><button onclick="tab('settings',this)">Settings</button><button onclick="location.href='/'">View Store</button><button onclick="logout()">Sign out</button></div></aside>
 <main class="main"><div class="top"><div><div class="eyebrow">PRIVATE ADMINISTRATION</div><h1 id="title">Overview</h1><div class="muted">Premium Collection By Sanjida</div></div><button class="btn gold" onclick="tab('products');newProduct()">+ Add New Product</button></div>
 <section id="dashboard" class="section active"><div class="stats"><div class="stat"><span>Total Products</span><strong id="n1">0</strong></div><div class="stat"><span>Live Products</span><strong id="n2">0</strong></div><div class="stat"><span>Categories</span><strong id="n3">0</strong></div><div class="stat"><span>Total Orders</span><strong id="n4">0</strong></div></div><div class="panel content"><h2>Store Control Centre</h2><p class="muted">Add products here and they will immediately appear on the customer storefront. Customer orders are saved on the server and appear in Orders.</p><button class="btn soft" onclick="exportBackup()">Export product backup</button></div></section>
