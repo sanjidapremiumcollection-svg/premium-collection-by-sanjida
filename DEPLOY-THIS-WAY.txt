@@ -1,0 +1,27 @@
+PREMIUM COLLECTION BY SANJIDA - FINAL
+
+IMPORTANT: This project has a real Node/Express backend. Deploy as a RENDER WEB SERVICE, NOT a Static Site.
+
+GitHub:
+- Upload ALL files and folders from this ZIP to the repository root.
+- Keep package.json and server.js in the ROOT of the repository.
+
+Render Web Service:
+- Runtime: Node
+- Branch: main
+- Root Directory: blank
+- Build Command: npm install
+- Start Command: npm start
+
+After deploy:
+- Store: /
+- Admin: /admin
+- Admin Dashboard: /admin/dashboard
+- Health check: /health
+
+Admin credentials:
+Phone: 01918444462
+Username: sanjidacollection
+Password: 5566
+
+DO NOT create a Static Site for this version.
