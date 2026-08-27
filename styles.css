@@ -71,3 +71,75 @@ input,select,textarea,button{max-width:100%}
 .pc-social-float .wa{background:#25D366}.pc-social-float .fb{background:#1877F2}
 .pc-social-float svg{width:25px;height:25px;fill:currentColor}
 @media(max-width:640px){.pc-social-float{right:12px;bottom:12px}.pc-social-float a{width:48px;height:48px}}
+
+/* Final mobile polish: header, content spacing, cards and footer */
+@media (max-width: 600px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{font-size:14px}
+  .site-header{height:76px;min-height:76px;padding:0 16px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;position:sticky;top:0;background:rgba(247,243,237,.98);z-index:100}
+  .brand{position:static!important;transform:none!important;left:auto!important;top:auto!important;display:block!important;text-align:left!important;white-space:normal!important;font-size:18px!important;line-height:1.05!important;letter-spacing:.06em!important;max-width:calc(100% - 72px)}
+  .brand span{font-size:8px!important;letter-spacing:.28em!important;margin-top:5px!important}
+  .site-header nav{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:0!important;font-size:0!important;margin-left:auto}
+  .site-header nav a:not(.cart-link){display:none!important}
+  .cart-link{display:flex!important;align-items:center!important;gap:5px!important;font-size:12px!important;font-weight:600!important;white-space:nowrap!important}
+  .cart-link:before{content:'🛍';font-size:22px;line-height:1}
+  .cart-link b{font-size:11px!important;min-width:24px;height:24px;padding:4px 6px!important;margin-left:0!important;text-align:center}
+
+  .hero{min-height:480px!important;padding:64px 22px 70px!important;align-items:flex-start!important;background:linear-gradient(145deg,#eee5da 0%,#f8f3ed 68%,#e7d8cd 100%)!important}
+  .hero>div{width:100%;max-width:100%}
+  .hero .eyebrow{font-size:9px!important;letter-spacing:.22em!important;margin:0 0 18px!important}
+  .hero h1{font-size:clamp(42px,12vw,58px)!important;line-height:.98!important;margin:0 0 20px!important;letter-spacing:-.025em}
+  .hero p{font-size:15px!important;line-height:1.65!important;max-width:330px!important;margin:0!important}
+  .hero .btn{width:auto!important;min-height:48px!important;padding:15px 22px!important;margin-top:25px!important;font-size:10px!important}
+
+  .section{padding:58px 20px!important}
+  .section-head{margin-bottom:20px!important}
+  .section-head h2,.about h2,.contact-strip h2{font-size:34px!important;line-height:1.08!important;margin:7px 0 20px!important}
+  .eyebrow{font-size:9px!important;letter-spacing:.22em!important}
+  .category-grid{grid-template-columns:1fr!important;gap:16px!important}
+  .category-image-card .category-art{height:190px!important}
+  .category-photo::after{left:16px;bottom:16px;padding:10px 13px;font-size:9px}
+  .category-image-card .category-copy{padding:16px 18px!important}
+  .category-image-card .category-copy h3{font-size:22px!important}
+
+  .featured-section{padding-top:48px!important}
+  .featured-world{padding:18px!important;margin-top:20px!important;border-radius:4px}
+  .cosmetics-world{margin-top:22px!important}
+  .world-heading{display:block!important;padding-bottom:18px!important;margin-bottom:18px!important}
+  .world-heading h3{font-size:24px!important;line-height:1.15!important;margin:6px 0 8px!important}
+  .world-heading>div>p:last-child{font-size:11px!important;line-height:1.55!important}
+  .text-link{display:inline-block;margin-top:14px;font-size:9px!important}
+  .featured-world .product-grid{grid-template-columns:1fr!important;gap:12px!important}
+  .product-grid{grid-template-columns:1fr!important;gap:14px!important}
+  .product-image-wrap{height:280px!important}
+  .product-info{padding:16px!important}
+  .product-info h3{font-size:21px!important}
+  .empty-products{padding:24px 16px!important}
+  .empty-products h3{font-size:20px!important}
+
+  .about{padding:55px 20px!important}
+  .contact-strip{min-height:0!important;padding:58px 20px!important}
+  .contact-card h2{font-size:35px!important}
+  .contact-subtitle{font-size:13px!important;line-height:1.6!important}
+  .whatsapp-contact{width:100%!important;max-width:320px;padding:14px 18px!important}
+
+  footer{padding:42px 20px 18px!important}
+  .footer-grid{display:grid!important;grid-template-columns:1fr!important;gap:28px!important}
+  .footer-grid>div{min-width:0}
+  .footer-grid h3{font-size:22px!important;line-height:1.15!important;margin-bottom:4px!important}
+  .footer-grid small{font-size:8px!important}
+  .footer-grid b{display:block;font-size:10px!important;letter-spacing:.22em!important;margin-bottom:9px!important}
+  .footer-grid p,.footer-grid span,.footer-grid a{font-size:12px!important;line-height:1.65!important;margin:5px 0!important;overflow-wrap:anywhere}
+  .socials{margin-top:10px!important}
+  .social-icon{width:40px!important;height:40px!important;margin-right:5px!important}
+  .copyright{margin-top:30px!important;padding-top:18px!important;font-size:11px!important;line-height:1.5!important}
+  .pc-contact-buttons{right:12px!important;bottom:12px!important;gap:8px!important}
+  .pc-contact-buttons a{width:48px!important;height:48px!important}
+}
+
+@media (min-width:601px) and (max-width:900px){
+  .site-header{padding:0 24px}
+  .hero{padding-left:7vw;padding-right:7vw}
+  .section{padding-left:5vw;padding-right:5vw}
+  .footer-grid{grid-template-columns:1fr 1fr!important;gap:30px}
+}
