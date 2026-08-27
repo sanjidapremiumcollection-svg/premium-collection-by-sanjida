@@ -1,0 +1,1 @@
+Fixed checkout/success mobile social icons: duplicate contact buttons removed and WhatsApp/Facebook floating icons constrained to proper size.
