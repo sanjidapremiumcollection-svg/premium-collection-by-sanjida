@@ -65,12 +65,12 @@ input,select,textarea,button{max-width:100%}
   .socials{flex-wrap:wrap}
   table{display:block;overflow-x:auto;max-width:100%}
 }
-.pc-social-float{position:fixed;right:18px;bottom:18px;z-index:10000;display:flex;flex-direction:column;gap:10px}
-.pc-social-float a{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;box-shadow:0 8px 22px rgba(20,35,55,.22);border:2px solid rgba(255,255,255,.75);transition:transform .2s ease,box-shadow .2s ease}
-.pc-social-float a:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(20,35,55,.28)}
-.pc-social-float .wa{background:#25D366}.pc-social-float .fb{background:#1877F2}
-.pc-social-float svg{width:25px;height:25px;fill:currentColor}
-@media(max-width:640px){.pc-social-float{right:12px;bottom:12px}.pc-social-float a{width:48px;height:48px}}
+
+
+
+
+
+@media(max-width:640px){}
 
 /* Final mobile polish: header, content spacing, cards and footer */
 @media (max-width: 600px){
@@ -133,8 +133,8 @@ input,select,textarea,button{max-width:100%}
   .socials{margin-top:10px!important}
   .social-icon{width:40px!important;height:40px!important;margin-right:5px!important}
   .copyright{margin-top:30px!important;padding-top:18px!important;font-size:11px!important;line-height:1.5!important}
-  .pc-contact-buttons{right:12px!important;bottom:12px!important;gap:8px!important}
-  .pc-contact-buttons a{width:48px!important;height:48px!important}
+  
+  
 }
 
 @media (min-width:601px) and (max-width:900px){
@@ -183,8 +183,8 @@ img{max-width:100%;height:auto}
   .footer-grid h3{font-size:23px}
   .footer-grid p,.footer-grid span,.footer-grid a{font-size:13px;line-height:1.8}
   .copyright{margin-top:32px;padding-top:20px;font-size:12px;line-height:1.6}
-  .pc-contact-buttons{right:10px;bottom:10px}
-  .pc-contact-buttons a{width:50px;height:50px}
+  
+  
 }
 @media(max-width:380px){
   .site-header .brand{font-size:14px}
