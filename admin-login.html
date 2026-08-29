@@ -36,6 +36,14 @@ img,video{max-width:100%;height:auto}
   input{min-height:46px}
 }
 </style>
+
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon-180.png">
+  <meta property="og:site_name" content="Premium Collection By Sanjida">
+  <meta property="og:image" content="/assets/og-logo.png">
+  <link rel="manifest" href="/site.webmanifest">
 </head><body><div class="wrap"><section class="left"><div class="brand">PREMIUM COLLECTION<span>BY SANJIDA</span></div><div class="hero"><div class="eyebrow">PRIVATE ADMINISTRATION</div><h1>Welcome<br>behind the collection.</h1><p>Manage your products, orders and storefront from a private professional workspace.</p></div><div class="secure">SECURE ADMIN ACCESS · 2026</div></section><main class="right"><div class="card"><h2>Admin Access</h2><div class="sub">Enter all three credentials to continue</div><div class="line"></div><label>Phone Number</label><input id="number" inputmode="tel" placeholder="01918444462"><label>Username</label><input id="username" placeholder="sanjidacollection"><label>Password</label><input id="password" type="password" placeholder="••••"><button class="enter" id="btn" onclick="login()">ENTER ADMIN PANEL</button><div id="error" class="error"></div><a class="back" href="/">← Return to collection</a></div></main></div>
 <script>
 async function login(){const btn=document.getElementById('btn'),err=document.getElementById('error');btn.disabled=true;btn.textContent='VERIFYING...';err.textContent='';
