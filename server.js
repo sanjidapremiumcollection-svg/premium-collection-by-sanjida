@@ -53,12 +53,12 @@ async function initDatabase() {
 
 async function getProducts() {
   if (!pool) return readJson(PRODUCTS_FILE, []);
-  const r = await pool.query('SELECT data FROM products ORDER BY (data->>'createdAt') DESC');
+  const r = await pool.query(`SELECT data FROM products ORDER BY (data->>'createdAt') DESC`);
   return r.rows.map(r => r.data);
 }
 async function getOrders() {
   if (!pool) return readJson(ORDERS_FILE, []);
-  const r = await pool.query('SELECT data FROM orders ORDER BY (data->>'placedAt') DESC');
+  const r = await pool.query(`SELECT data FROM orders ORDER BY (data->>'placedAt') DESC`);
   return r.rows.map(r => r.data);
 }
 async function saveProduct(item) {
