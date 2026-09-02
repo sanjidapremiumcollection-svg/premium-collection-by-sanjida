@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Dashboard — Premium Collection By Sanjida</title>
+<title>Premium Collection By Sanjida — Admin</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap');
 *{box-sizing:border-box}body{margin:0;background:#f6f3ee;color:#17243a;font-family:Inter,Arial,sans-serif}.side{position:fixed;inset:0 auto 0 0;width:250px;background:#17243a;color:#fff;padding:25px 15px}.brand{font:600 25px "Cormorant Garamond",serif;letter-spacing:1px;padding:6px 12px 29px}.brand small{display:block;font:8px Inter;letter-spacing:3px;color:#c9ab70;margin-top:4px}.nav button{display:block;width:100%;border:0;background:transparent;color:#c9d1da;padding:12px 13px;text-align:left;border-radius:9px;margin:3px 0;cursor:pointer}.nav button.active,.nav button:hover{background:#25364c;color:#fff}.main{margin-left:250px;padding:30px;max-width:1600px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.eyebrow{font-size:9px;letter-spacing:2.6px;color:#a77d3e}.top h1{font:600 39px "Cormorant Garamond",serif;margin:4px 0}.muted{color:#7c828a;font-size:13px}.btn{border:0;border-radius:9px;padding:11px 15px;cursor:pointer}.gold{background:#a77d3e;color:#fff}.soft{background:#eeeae3;color:#354052}.danger{background:#fee2e2;color:#991b1b}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.stat,.panel{background:#fff;border:1px solid #e6e0d7;border-radius:14px}.stat{padding:19px}.stat span{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8a8d91}.stat strong{display:block;font:600 32px "Cormorant Garamond",serif;margin-top:6px}.section{display:none}.section.active{display:block}.content{margin-top:18px}.grid{display:grid;grid-template-columns:370px 1fr;gap:18px}.panel{padding:20px}.panel h2{font:600 25px "Cormorant Garamond",serif;margin:0 0 16px}label{display:block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:600;margin:13px 0 6px}input,select,textarea{width:100%;padding:11px;border:1px solid #dcd7cf;border-radius:8px;background:#fcfbf8;font:inherit}textarea{min-height:90px;resize:vertical}.toolbar{display:flex;gap:9px;margin-bottom:14px;flex-wrap:wrap}.toolbar input{max-width:300px}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:11px;border-bottom:1px solid #eee9e2;text-align:left;white-space:nowrap;font-size:13px}.thumb{width:48px;height:48px;object-fit:cover;border-radius:7px}.badge{font-size:10px;padding:5px 8px;border-radius:20px;background:#eee6d7;color:#795726}.off{background:#f0f0ef;color:#73777d}.actions{display:flex;gap:6px}.preview{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.preview img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px}.empty{text-align:center;padding:35px;color:#8a8e94}.order{padding:15px;border:1px solid #eee9e2;border-radius:10px;margin-bottom:9px;background:#fff}.order-top{display:flex;justify-content:space-between;gap:10px}.status{padding:6px 9px;border-radius:20px;background:#eee6d7;color:#795726;font-size:10px}.order-items{margin-top:10px;color:#626870;font-size:12px;line-height:1.7}.order-actions{margin-top:12px;display:flex;gap:7px;flex-wrap:wrap}.note{font-size:12px;line-height:1.7;color:#7c8188}@media(max-width:950px){.side{position:static;width:100%}.main{margin:0;padding:16px}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.stats{grid-template-columns:1fr}.top{flex-direction:column;align-items:flex-start;gap:10px}}
@@ -56,13 +56,11 @@ html,body{max-width:100%;overflow-x:hidden}.side{z-index:20}.main{width:auto}
 }
 </style>
 
-  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon-180.png">
-  <meta property="og:site_name" content="Premium Collection By Sanjida">
-  <meta property="og:image" content="/assets/og-logo.png">
-  <link rel="manifest" href="/site.webmanifest">
+<!-- BRANDING-SEO-START -->
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<!-- BRANDING-SEO-END -->
 </head><body>
 <aside class="side"><div class="brand">PREMIUM COLLECTION<small>BY SANJIDA · ADMIN</small></div><div class="nav"><button class="active" onclick="tab('dashboard',this)">Overview</button><button onclick="tab('products',this)">Products</button><button onclick="tab('orders',this)">Orders</button><button onclick="tab('settings',this)">Settings</button><button onclick="location.href='/'">View Store</button><button onclick="logout()">Sign out</button></div></aside>
 <main class="main"><div class="top"><div><div class="eyebrow">PRIVATE ADMINISTRATION</div><h1 id="title">Overview</h1><div class="muted">Premium Collection By Sanjida</div></div><button class="btn gold" onclick="tab('products');newProduct()">+ Add New Product</button></div>
@@ -100,4 +98,15 @@ function logout(){sessionStorage.removeItem('pcs_admin_token');location.href='/a
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 newProduct();load();
 </script>
+<div class="pc-contact-buttons">
+<a href="https://wa.me/8801918558861" target="_blank" rel="noopener" aria-label="WhatsApp 01918558861">WhatsApp</a>
+<a href="https://www.facebook.com/PremiumcollectionbySanjida" target="_blank" rel="noopener" aria-label="Facebook Page">Facebook</a>
+</div>
+<style>
+.pc-contact-buttons{position:fixed;right:16px;bottom:16px;z-index:99999;display:flex;flex-direction:column;gap:9px}
+.pc-contact-buttons a{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#18283d;color:#fff;text-decoration:none;font:600 9px Arial;box-shadow:0 7px 22px #0003}
+.pc-contact-buttons a:first-child{background:#25d366}
+.pc-contact-buttons a:last-child{background:#1877f2}
+@media(max-width:520px){.pc-contact-buttons{right:10px;bottom:10px}.pc-contact-buttons a{width:48px;height:48px;font-size:8px}}
+</style>
 </body></html>

@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Access — Premium Collection By Sanjida</title>
+<title>Premium Collection By Sanjida — Admin</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap');
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f5f1eb;color:#18253a;font-family:Inter,Arial,sans-serif}.wrap{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr}.left{position:relative;overflow:hidden;background:linear-gradient(140deg,#142238,#30455d);color:#fff;padding:58px;display:flex;flex-direction:column;justify-content:space-between}.left:after{content:"";position:absolute;width:620px;height:620px;border:1px solid #c8a86b55;border-radius:50%;right:-260px;top:-210px}.brand{font:600 27px "Cormorant Garamond",serif;letter-spacing:2px;position:relative;z-index:2}.brand span{display:block;font:9px Inter;letter-spacing:4px;color:#cdb276;margin-top:4px}.hero{position:relative;z-index:2}.eyebrow{font-size:10px;letter-spacing:3px;color:#d1b477}.hero h1{font:600 clamp(52px,6vw,82px)/.9 "Cormorant Garamond",serif;margin:15px 0 22px}.hero p{max-width:490px;color:#dce2e9;line-height:1.8}.secure{font-size:10px;letter-spacing:2px;color:#cbd3dc;position:relative;z-index:2}.right{display:grid;place-items:center;padding:30px}.card{width:min(470px,100%);background:#fff;border:1px solid #e5ded3;border-radius:24px;padding:42px;box-shadow:0 30px 90px #1b2a3d18}.card h2{font:600 34px "Cormorant Garamond",serif;margin:0}.sub{color:#7c8086;font-size:13px;margin:4px 0 25px}.line{height:1px;background:#e9e5df;margin-bottom:23px}label{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin:16px 0 7px}input{width:100%;padding:14px;border:1px solid #d7d3cc;border-radius:10px;background:#fcfbf9;outline:none}input:focus{border-color:#ad8750;box-shadow:0 0 0 3px #ad875015}.enter{width:100%;padding:14px;margin-top:22px;border:0;border-radius:10px;background:#18283d;color:#fff;font-weight:600;letter-spacing:.5px;cursor:pointer}.enter:disabled{opacity:.6}.error{min-height:20px;color:#b42318;font-size:12px;margin:12px 0}.back{font-size:12px;color:#777;text-decoration:none}@media(max-width:800px){.wrap{grid-template-columns:1fr}.left{min-height:340px;padding:30px}.hero h1{font-size:54px}.right{padding:18px}.card{padding:30px}}
@@ -37,27 +37,26 @@ img,video{max-width:100%;height:auto}
 }
 </style>
 
-  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon-180.png">
-  <meta property="og:site_name" content="Premium Collection By Sanjida">
-  <meta property="og:image" content="/assets/og-logo.png">
-
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"Premium Collection By Sanjida",
-    "logo":"/assets/site-logo.png",
-    "url":"https://sanjidapremiumcollection.online/"
-  }
-  </script>
-  <link rel="manifest" href="/site.webmanifest">
+<!-- BRANDING-SEO-START -->
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<!-- BRANDING-SEO-END -->
 </head><body><div class="wrap"><section class="left"><div class="brand">PREMIUM COLLECTION<span>BY SANJIDA</span></div><div class="hero"><div class="eyebrow">PRIVATE ADMINISTRATION</div><h1>Welcome<br>behind the collection.</h1><p>Manage your products, orders and storefront from a private professional workspace.</p></div><div class="secure">SECURE ADMIN ACCESS · 2026</div></section><main class="right"><div class="card"><h2>Admin Access</h2><div class="sub">Enter all three credentials to continue</div><div class="line"></div><label>Phone Number</label><input id="number" inputmode="tel" placeholder="01918444462"><label>Username</label><input id="username" placeholder="sanjidacollection"><label>Password</label><input id="password" type="password" placeholder="••••"><button class="enter" id="btn" onclick="login()">ENTER ADMIN PANEL</button><div id="error" class="error"></div><a class="back" href="/">← Return to collection</a></div></main></div>
 <script>
 async function login(){const btn=document.getElementById('btn'),err=document.getElementById('error');btn.disabled=true;btn.textContent='VERIFYING...';err.textContent='';
 try{const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({number:number.value.trim(),username:username.value.trim(),password:password.value})});const d=await r.json();if(!r.ok)throw new Error(d.message||'Invalid credentials');sessionStorage.setItem('pcs_admin_token',d.token);location.href='/admin/dashboard'}catch(e){err.textContent=e.message}finally{btn.disabled=false;btn.textContent='ENTER ADMIN PANEL'}}
 password.addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 </script>
+<div class="pc-contact-buttons">
+<a href="https://wa.me/8801918558861" target="_blank" rel="noopener" aria-label="WhatsApp 01918558861">WhatsApp</a>
+<a href="https://www.facebook.com/PremiumcollectionbySanjida" target="_blank" rel="noopener" aria-label="Facebook Page">Facebook</a>
+</div>
+<style>
+.pc-contact-buttons{position:fixed;right:16px;bottom:16px;z-index:99999;display:flex;flex-direction:column;gap:9px}
+.pc-contact-buttons a{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#18283d;color:#fff;text-decoration:none;font:600 9px Arial;box-shadow:0 7px 22px #0003}
+.pc-contact-buttons a:first-child{background:#25d366}
+.pc-contact-buttons a:last-child{background:#1877f2}
+@media(max-width:520px){.pc-contact-buttons{right:10px;bottom:10px}.pc-contact-buttons a{width:48px;height:48px;font-size:8px}}
+</style>
 </body></html>
