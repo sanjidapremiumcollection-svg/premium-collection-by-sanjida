@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin/
+Disallow: /admin-dashboard.html
+Disallow: /admin-login.html
+
+Sitemap: https://sanjidapremiumcollection.online/sitemap.xml

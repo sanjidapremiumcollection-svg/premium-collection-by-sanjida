@@ -1,0 +1,15 @@
+PREMIUM COLLECTION BY SANJIDA — BRANDING SETUP
+
+Added:
+- Favicon PNGs (16/32/48/512) and Apple touch icon using the supplied brand artwork.
+- Website manifest with brand name and theme color.
+- Page titles and meta descriptions across public pages.
+- Canonical URLs for the sanjidapremiumcollection.online domain.
+- Open Graph and Twitter card metadata using the supplied logo.
+- Organization + WebSite JSON-LD on the homepage for search-engine brand understanding.
+- robots.txt and sitemap.xml for search crawling.
+- noindex metadata for admin pages.
+
+Important:
+- Google does not guarantee exactly how a result title/logo appears. The favicon and structured metadata help, but indexing and search appearance are controlled by Google.
+- After deployment, submit https://sanjidapremiumcollection.online/sitemap.xml in Google Search Console and request indexing for the homepage.
