@@ -1,0 +1,1 @@
+BUY NOW buttons are bottom-aligned within each product card so cards in the same row stay visually aligned even when descriptions have different lengths.
