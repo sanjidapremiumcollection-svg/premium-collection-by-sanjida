@@ -276,3 +276,9 @@ img{max-width:100%;height:auto}
   justify-content:center;
   box-sizing:border-box;
 }
+
+/* WhatsApp-only footer contact */
+.whatsapp-footer-icon{background:#25d366!important;border-color:rgba(255,255,255,.9)!important;color:#fff!important}
+.whatsapp-footer-icon:hover{background:#20bd5b!important;border-color:#fff!important;transform:translateY(-2px)}
+.whatsapp-footer-icon svg{fill:currentColor!important;stroke:none!important}
+.whatsapp-footer-number{display:inline-block!important;margin-left:8px;color:#fff!important;font-size:12px!important;font-weight:700!important;vertical-align:middle;letter-spacing:.04em}
