@@ -26,8 +26,13 @@ let dbAvailable = false;
 const pool = process.env.DATABASE_URL ? new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
-  max: 5
+  max: 5,
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 30000
 }) : null;
+if (pool) {
+  pool.on('error', (err) => console.error('PostgreSQL pool error:', err.message));
+}
 
 async function initDatabase() {
   if (!pool) return;
@@ -76,8 +81,29 @@ async function deleteProduct(id) {
   const r=await pool.query('DELETE FROM products WHERE id=$1', [id]); return r.rowCount>0;
 }
 async function saveOrder(item) {
-  if (!pool) { const a=readJson(ORDERS_FILE, []); a.unshift(item); writeJson(ORDERS_FILE,a); return; }
-  await pool.query('INSERT INTO orders (order_id, data) VALUES ($1,$2::jsonb) ON CONFLICT (order_id) DO UPDATE SET data=EXCLUDED.data', [item.orderId, JSON.stringify(item)]);
+  if (!pool) {
+    const a = readJson(ORDERS_FILE, []);
+    a.unshift(item);
+    writeJson(ORDERS_FILE, a);
+    return;
+  }
+  // If the first database connection was not ready yet, retry initialization
+  // at the moment an order is placed instead of failing checkout.
+  if (!dbAvailable) {
+    try { await initDatabase(); } catch (err) {
+      console.error('Database not ready while saving order:', err.message);
+    }
+  }
+  if (!dbAvailable) {
+    const a = readJson(ORDERS_FILE, []);
+    a.unshift(item);
+    writeJson(ORDERS_FILE, a);
+    return;
+  }
+  await pool.query(
+    'INSERT INTO orders (order_id, data) VALUES ($1,$2::jsonb) ON CONFLICT (order_id) DO UPDATE SET data=EXCLUDED.data',
+    [item.orderId, JSON.stringify(item)]
+  );
 }
 async function updateOrder(item) {
   if (!pool || !dbAvailable) { const a=readJson(ORDERS_FILE, []), i=a.findIndex(x=>x.orderId===item.orderId); if(i>=0){a[i]=item;writeJson(ORDERS_FILE,a);} return; }
@@ -230,10 +256,20 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Premium Collection By Sanjida running on port ${PORT}`);
   if (process.env.DATABASE_URL) {
-    initDatabase().catch(err => {
-      dbAvailable = false;
-      console.error("Database initialization failed; server will continue using local fallback:", err.message);
-    });
+    const connect = async () => {
+      try {
+        await initDatabase();
+      } catch (err) {
+        dbAvailable = false;
+        console.error("Database initialization failed; checkout will retry automatically:", err.message);
+      }
+    };
+    connect();
+    // Keep retrying in the background so a temporary Supabase/network issue
+    // does not require a manual Render redeploy.
+    setInterval(() => {
+      if (!dbAvailable) connect();
+    }, 15000).unref();
   } else {
     console.warn("DATABASE_URL is not set; server is using local file storage.");
   }
