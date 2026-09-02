@@ -2,6 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const { Pool } = require("pg");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -19,6 +20,72 @@ function writeJson(file, data) {
 }
 if (!fs.existsSync(PRODUCTS_FILE)) writeJson(PRODUCTS_FILE, []);
 if (!fs.existsSync(ORDERS_FILE)) writeJson(ORDERS_FILE, []);
+// Persistent storage: when DATABASE_URL is present (Render + Supabase),
+// products and orders are stored in PostgreSQL instead of Render's ephemeral filesystem.
+const pool = process.env.DATABASE_URL ? new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+  max: 5
+}) : null;
+
+async function initDatabase() {
+  if (!pool) return;
+  await pool.query(`CREATE TABLE IF NOT EXISTS products (id TEXT PRIMARY KEY, data JSONB NOT NULL)`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS orders (order_id TEXT PRIMARY KEY, data JSONB NOT NULL)`);
+
+  const pc = await pool.query('SELECT COUNT(*)::int AS count FROM products');
+  if (pc.rows[0].count === 0) {
+    const oldProducts = readJson(PRODUCTS_FILE, []);
+    for (const item of oldProducts) {
+      await pool.query('INSERT INTO products (id, data) VALUES ($1, $2::jsonb) ON CONFLICT (id) DO NOTHING', [item.id, JSON.stringify(item)]);
+    }
+  }
+
+  const oc = await pool.query('SELECT COUNT(*)::int AS count FROM orders');
+  if (oc.rows[0].count === 0) {
+    const oldOrders = readJson(ORDERS_FILE, []);
+    for (const item of oldOrders) {
+      await pool.query('INSERT INTO orders (order_id, data) VALUES ($1, $2::jsonb) ON CONFLICT (order_id) DO NOTHING', [item.orderId, JSON.stringify(item)]);
+    }
+  }
+  console.log('Persistent PostgreSQL storage connected');
+}
+
+async function getProducts() {
+  if (!pool) return readJson(PRODUCTS_FILE, []);
+  const r = await pool.query('SELECT data FROM products ORDER BY (data->>'createdAt') DESC');
+  return r.rows.map(r => r.data);
+}
+async function getOrders() {
+  if (!pool) return readJson(ORDERS_FILE, []);
+  const r = await pool.query('SELECT data FROM orders ORDER BY (data->>'placedAt') DESC');
+  return r.rows.map(r => r.data);
+}
+async function saveProduct(item) {
+  if (!pool) { const a = readJson(PRODUCTS_FILE, []); a.unshift(item); writeJson(PRODUCTS_FILE, a); return; }
+  await pool.query('INSERT INTO products (id, data) VALUES ($1, $2::jsonb) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data', [item.id, JSON.stringify(item)]);
+}
+async function updateProduct(item) {
+  if (!pool) { const a = readJson(PRODUCTS_FILE, []); const i=a.findIndex(x=>x.id===item.id); if(i>=0){a[i]=item;writeJson(PRODUCTS_FILE,a);} return; }
+  await pool.query('UPDATE products SET data=$2::jsonb WHERE id=$1', [item.id, JSON.stringify(item)]);
+}
+async function deleteProduct(id) {
+  if (!pool) { const a=readJson(PRODUCTS_FILE, []), n=a.filter(x=>x.id!==id); writeJson(PRODUCTS_FILE,n); return a.length!==n.length; }
+  const r=await pool.query('DELETE FROM products WHERE id=$1', [id]); return r.rowCount>0;
+}
+async function saveOrder(item) {
+  if (!pool) { const a=readJson(ORDERS_FILE, []); a.unshift(item); writeJson(ORDERS_FILE,a); return; }
+  await pool.query('INSERT INTO orders (order_id, data) VALUES ($1,$2::jsonb) ON CONFLICT (order_id) DO UPDATE SET data=EXCLUDED.data', [item.orderId, JSON.stringify(item)]);
+}
+async function updateOrder(item) {
+  if (!pool) { const a=readJson(ORDERS_FILE, []), i=a.findIndex(x=>x.orderId===item.orderId); if(i>=0){a[i]=item;writeJson(ORDERS_FILE,a);} return; }
+  await pool.query('UPDATE orders SET data=$2::jsonb WHERE order_id=$1', [item.orderId, JSON.stringify(item)]);
+}
+async function deleteOrder(id) {
+  if (!pool) { const a=readJson(ORDERS_FILE, []), n=a.filter(x=>x.orderId!==id); writeJson(ORDERS_FILE,n); return a.length!==n.length; }
+  const r=await pool.query('DELETE FROM orders WHERE order_id=$1', [id]); return r.rowCount>0;
+}
+
 
 const sessions = new Map();
 const ADMIN_NUMBER = process.env.ADMIN_NUMBER || "01918444462";
@@ -63,14 +130,13 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => { res.set("X-PC-Route", "storefront"); res.sendFile(path.join(ROOT, "index.html")); });
 app.get("/index.html", (req, res) => { res.set("X-PC-Route", "storefront"); res.sendFile(path.join(ROOT, "index.html")); });
 
-app.get("/api/products", (req, res) => {
-  res.json(readJson(PRODUCTS_FILE, []));
+app.get("/api/products", async (req, res) => {
+  try { res.json(await getProducts()); } catch (e) { console.error(e); res.status(500).json({ message: "Could not load products" }); }
 });
 
-app.post("/api/products", auth, (req, res) => {
+app.post("/api/products", auth, async (req, res) => {
   const body = req.body || {};
   if (!String(body.name || "").trim()) return res.status(400).json({ message: "Product name is required" });
-  const products = readJson(PRODUCTS_FILE, []);
   const product = {
     id: crypto.randomUUID(),
     name: String(body.name).trim(),
@@ -83,13 +149,11 @@ app.post("/api/products", auth, (req, res) => {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-  products.unshift(product);
-  writeJson(PRODUCTS_FILE, products);
-  res.status(201).json(product);
+  try { await saveProduct(product); res.status(201).json(product); } catch (e) { console.error(e); res.status(500).json({ message: "Could not save product" }); }
 });
 
-app.put("/api/products/:id", auth, (req, res) => {
-  const products = readJson(PRODUCTS_FILE, []);
+app.put("/api/products/:id", auth, async (req, res) => {
+  const products = await getProducts();
   const i = products.findIndex(p => p.id === req.params.id);
   if (i < 0) return res.status(404).json({ message: "Product not found" });
   const b = req.body || {};
@@ -104,24 +168,18 @@ app.put("/api/products/:id", auth, (req, res) => {
     active: b.active !== false,
     updatedAt: new Date().toISOString()
   };
-  writeJson(PRODUCTS_FILE, products);
-  res.json(products[i]);
+  try { await updateProduct(products[i]); res.json(products[i]); } catch (e) { console.error(e); res.status(500).json({ message: "Could not update product" }); }
 });
 
-app.delete("/api/products/:id", auth, (req, res) => {
-  const products = readJson(PRODUCTS_FILE, []);
-  const next = products.filter(p => p.id !== req.params.id);
-  if (next.length === products.length) return res.status(404).json({ message: "Product not found" });
-  writeJson(PRODUCTS_FILE, next);
-  res.json({ ok: true });
+app.delete("/api/products/:id", auth, async (req, res) => {
+  try { if (!(await deleteProduct(req.params.id))) return res.status(404).json({ message: "Product not found" }); res.json({ ok: true }); } catch (e) { console.error(e); res.status(500).json({ message: "Could not delete product" }); }
 });
 
-app.post("/api/orders", (req, res) => {
+app.post("/api/orders", async (req, res) => {
   const b = req.body || {};
   if (!b.customer || !b.shipping || !Array.isArray(b.items) || !b.items.length) {
     return res.status(400).json({ ok: false, message: "Incomplete order information" });
   }
-  const orders = readJson(ORDERS_FILE, []);
   const order = {
     orderId: "PCS-" + Date.now().toString(36).toUpperCase() + "-" + crypto.randomBytes(2).toString("hex").toUpperCase(),
     customer: b.customer,
@@ -133,31 +191,24 @@ app.post("/api/orders", (req, res) => {
     status: "Pending",
     placedAt: new Date().toISOString()
   };
-  orders.unshift(order);
-  writeJson(ORDERS_FILE, orders);
-  res.status(201).json({ ok: true, orderId: order.orderId });
+  try { await saveOrder(order); res.status(201).json({ ok: true, orderId: order.orderId }); } catch (e) { console.error(e); res.status(500).json({ ok: false, message: "Could not save order" }); }
 });
 
-app.get("/api/admin/orders", auth, (req, res) => {
-  res.json({ orders: readJson(ORDERS_FILE, []) });
+app.get("/api/admin/orders", auth, async (req, res) => {
+  try { res.json({ orders: await getOrders() }); } catch (e) { console.error(e); res.status(500).json({ message: "Could not load orders" }); }
 });
 
-app.patch("/api/admin/orders/:id", auth, (req, res) => {
-  const orders = readJson(ORDERS_FILE, []);
+app.patch("/api/admin/orders/:id", auth, async (req, res) => {
+  const orders = await getOrders();
   const i = orders.findIndex(o => o.orderId === req.params.id);
   if (i < 0) return res.status(404).json({ message: "Order not found" });
   orders[i].status = String(req.body?.status || "Pending");
   orders[i].updatedAt = new Date().toISOString();
-  writeJson(ORDERS_FILE, orders);
-  res.json({ ok: true, order: orders[i] });
+  try { await updateOrder(orders[i]); res.json({ ok: true, order: orders[i] }); } catch (e) { console.error(e); res.status(500).json({ message: "Could not update order" }); }
 });
 
-app.delete("/api/admin/orders/:id", auth, (req, res) => {
-  const orders = readJson(ORDERS_FILE, []);
-  const next = orders.filter(o => o.orderId !== req.params.id);
-  if (next.length === orders.length) return res.status(404).json({ message: "Order not found" });
-  writeJson(ORDERS_FILE, next);
-  res.json({ ok: true });
+app.delete("/api/admin/orders/:id", auth, async (req, res) => {
+  try { if (!(await deleteOrder(req.params.id))) return res.status(404).json({ message: "Order not found" }); res.json({ ok: true }); } catch (e) { console.error(e); res.status(500).json({ message: "Could not delete order" }); }
 });
 
 app.get("/admin", (req, res) => res.sendFile(path.join(ROOT, "admin-login.html")));
@@ -174,4 +225,9 @@ app.use((req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Premium Collection By Sanjida running on port ${PORT}`));
+initDatabase().then(() => {
+  app.listen(PORT, () => console.log(`Premium Collection By Sanjida running on port ${PORT}`));
+}).catch(err => {
+  console.error("Database initialization failed:", err);
+  process.exit(1);
+});

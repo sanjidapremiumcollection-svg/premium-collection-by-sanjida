@@ -1,0 +1,8 @@
+PERMANENT PRODUCT STORAGE
+
+This version uses PostgreSQL/Supabase whenever DATABASE_URL is set.
+Render Environment Variable required:
+  DATABASE_URL = your Supabase PostgreSQL connection string
+
+Products and orders are stored in PostgreSQL, so Render restarts/redeploys will not erase them.
+On first startup, any existing data/products.json and data/orders.json are imported if the database tables are empty.
