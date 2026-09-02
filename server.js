@@ -50,6 +50,15 @@ app.post("/api/admin/login", (req, res) => {
 app.get("/health", (req, res) => res.json({ ok: true, service: "premium-collection-by-sanjida" }));
 
 // Always serve the storefront at the root URL.
+// Prevent browser/proxy caching from preserving an old admin redirect.
+app.use((req, res, next) => {
+  if (req.method === "GET" && !req.path.startsWith("/api/")) {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+  }
+  next();
+});
 // Admin is available only at /admin.
 app.get("/", (req, res) => res.sendFile(path.join(ROOT, "index.html")));
 app.get("/index.html", (req, res) => res.sendFile(path.join(ROOT, "index.html")));

@@ -32,7 +32,7 @@ echo Waiting for website to start...
 for /l %%i in (1,1,30) do (
   powershell -NoProfile -Command "try { $r=Invoke-WebRequest -UseBasicParsing -Uri 'http://localhost:10000/health' -TimeoutSec 1; if($r.StatusCode -eq 200){exit 0}else{exit 1} } catch { exit 1 }" >nul 2>&1
   if not errorlevel 1 (
-    start "" "http://localhost:10000/"
+    start "" "http://localhost:10000/?store=1"
     echo.
     echo Website is ready: http://localhost:10000/
     exit /b 0
