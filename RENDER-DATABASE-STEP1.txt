@@ -1,0 +1,15 @@
+PREMIUM COLLECTION BY SANJIDA — PERMANENT PRODUCT STORAGE
+
+FIRST FIX:
+The website now supports permanent PostgreSQL storage through the DATABASE_URL environment variable.
+
+LOCAL:
+If DATABASE_URL is not set, the website continues using data/products.json and data/orders.json.
+
+RENDER:
+After adding DATABASE_URL from a Render PostgreSQL database, products and orders are stored in PostgreSQL and survive restarts/redeploys.
+
+IMPORTANT:
+Do not delete the data/ folder. If a PostgreSQL database is connected and empty, the server automatically imports the existing products.json and orders.json once.
+
+Next step: create/connect a PostgreSQL database in Render and add its DATABASE_URL to the web service environment variables.
