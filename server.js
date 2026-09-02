@@ -22,6 +22,7 @@ if (!fs.existsSync(PRODUCTS_FILE)) writeJson(PRODUCTS_FILE, []);
 if (!fs.existsSync(ORDERS_FILE)) writeJson(ORDERS_FILE, []);
 // Persistent storage: when DATABASE_URL is present (Render + Supabase),
 // products and orders are stored in PostgreSQL instead of Render's ephemeral filesystem.
+let dbAvailable = false;
 const pool = process.env.DATABASE_URL ? new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
@@ -48,29 +49,30 @@ async function initDatabase() {
       await pool.query('INSERT INTO orders (order_id, data) VALUES ($1, $2::jsonb) ON CONFLICT (order_id) DO NOTHING', [item.orderId, JSON.stringify(item)]);
     }
   }
+  dbAvailable = true;
   console.log('Persistent PostgreSQL storage connected');
 }
 
 async function getProducts() {
-  if (!pool) return readJson(PRODUCTS_FILE, []);
+  if (!pool || !dbAvailable) return readJson(PRODUCTS_FILE, []);
   const r = await pool.query(`SELECT data FROM products ORDER BY (data->>'createdAt') DESC`);
   return r.rows.map(r => r.data);
 }
 async function getOrders() {
-  if (!pool) return readJson(ORDERS_FILE, []);
+  if (!pool || !dbAvailable) return readJson(ORDERS_FILE, []);
   const r = await pool.query(`SELECT data FROM orders ORDER BY (data->>'placedAt') DESC`);
   return r.rows.map(r => r.data);
 }
 async function saveProduct(item) {
-  if (!pool) { const a = readJson(PRODUCTS_FILE, []); a.unshift(item); writeJson(PRODUCTS_FILE, a); return; }
+  if (!pool || !dbAvailable) { const a = readJson(PRODUCTS_FILE, []); a.unshift(item); writeJson(PRODUCTS_FILE, a); return; }
   await pool.query('INSERT INTO products (id, data) VALUES ($1, $2::jsonb) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data', [item.id, JSON.stringify(item)]);
 }
 async function updateProduct(item) {
-  if (!pool) { const a = readJson(PRODUCTS_FILE, []); const i=a.findIndex(x=>x.id===item.id); if(i>=0){a[i]=item;writeJson(PRODUCTS_FILE,a);} return; }
+  if (!pool || !dbAvailable) { const a = readJson(PRODUCTS_FILE, []); const i=a.findIndex(x=>x.id===item.id); if(i>=0){a[i]=item;writeJson(PRODUCTS_FILE,a);} return; }
   await pool.query('UPDATE products SET data=$2::jsonb WHERE id=$1', [item.id, JSON.stringify(item)]);
 }
 async function deleteProduct(id) {
-  if (!pool) { const a=readJson(PRODUCTS_FILE, []), n=a.filter(x=>x.id!==id); writeJson(PRODUCTS_FILE,n); return a.length!==n.length; }
+  if (!pool || !dbAvailable) { const a=readJson(PRODUCTS_FILE, []), n=a.filter(x=>x.id!==id); writeJson(PRODUCTS_FILE,n); return a.length!==n.length; }
   const r=await pool.query('DELETE FROM products WHERE id=$1', [id]); return r.rowCount>0;
 }
 async function saveOrder(item) {
@@ -78,11 +80,11 @@ async function saveOrder(item) {
   await pool.query('INSERT INTO orders (order_id, data) VALUES ($1,$2::jsonb) ON CONFLICT (order_id) DO UPDATE SET data=EXCLUDED.data', [item.orderId, JSON.stringify(item)]);
 }
 async function updateOrder(item) {
-  if (!pool) { const a=readJson(ORDERS_FILE, []), i=a.findIndex(x=>x.orderId===item.orderId); if(i>=0){a[i]=item;writeJson(ORDERS_FILE,a);} return; }
+  if (!pool || !dbAvailable) { const a=readJson(ORDERS_FILE, []), i=a.findIndex(x=>x.orderId===item.orderId); if(i>=0){a[i]=item;writeJson(ORDERS_FILE,a);} return; }
   await pool.query('UPDATE orders SET data=$2::jsonb WHERE order_id=$1', [item.orderId, JSON.stringify(item)]);
 }
 async function deleteOrder(id) {
-  if (!pool) { const a=readJson(ORDERS_FILE, []), n=a.filter(x=>x.orderId!==id); writeJson(ORDERS_FILE,n); return a.length!==n.length; }
+  if (!pool || !dbAvailable) { const a=readJson(ORDERS_FILE, []), n=a.filter(x=>x.orderId!==id); writeJson(ORDERS_FILE,n); return a.length!==n.length; }
   const r=await pool.query('DELETE FROM orders WHERE order_id=$1', [id]); return r.rowCount>0;
 }
 
@@ -225,9 +227,14 @@ app.use((req, res) => {
   }
 });
 
-initDatabase().then(() => {
-  app.listen(PORT, () => console.log(`Premium Collection By Sanjida running on port ${PORT}`));
-}).catch(err => {
-  console.error("Database initialization failed:", err);
-  process.exit(1);
+app.listen(PORT, () => {
+  console.log(`Premium Collection By Sanjida running on port ${PORT}`);
+  if (process.env.DATABASE_URL) {
+    initDatabase().catch(err => {
+      dbAvailable = false;
+      console.error("Database initialization failed; server will continue using local fallback:", err.message);
+    });
+  } else {
+    console.warn("DATABASE_URL is not set; server is using local file storage.");
+  }
 });
