@@ -201,3 +201,16 @@ img{max-width:100%;height:auto}
 .collection-product-card .product-info .btn{width:100%;height:50px;display:flex;align-items:center;justify-content:center;margin-top:16px;padding:0 18px;border-radius:4px;background:linear-gradient(135deg,var(--sky-dark),#3579a6);color:#fff;font-size:10px;font-weight:700;letter-spacing:.2em;box-shadow:0 8px 18px rgba(67,141,189,.16);transition:transform .22s ease,box-shadow .22s ease,background .22s ease}
 .collection-product-card .product-info .btn:hover{transform:translateY(-2px);background:linear-gradient(135deg,#3579a6,#286b95);box-shadow:0 12px 24px rgba(67,141,189,.25)}
 .collection-product-card .product-info .btn:active{transform:translateY(0);box-shadow:0 6px 12px rgba(67,141,189,.16)}
+
+/* FINAL — keep every collection card BUY NOW aligned at the same bottom level */
+@media (min-width: 801px){
+  .collection-products .product-grid{align-items:stretch;grid-auto-rows:1fr}
+  .collection-products .collection-product-card{height:100%;min-height:720px;display:flex;flex-direction:column}
+  .collection-products .collection-product-card .product-info{flex:1;display:flex;flex-direction:column}
+  .collection-products .collection-product-card .product-info strong{margin-top:auto}
+  .collection-products .collection-product-card .product-info .btn{margin-top:16px;flex:0 0 50px}
+}
+@media (max-width: 800px){
+  .collection-products .collection-product-card{height:auto;min-height:0}
+  .collection-products .collection-product-card .product-info{display:flex;flex-direction:column}
+}
