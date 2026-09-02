@@ -60,8 +60,8 @@ app.use((req, res, next) => {
   next();
 });
 // Admin is available only at /admin.
-app.get("/", (req, res) => res.sendFile(path.join(ROOT, "index.html")));
-app.get("/index.html", (req, res) => res.sendFile(path.join(ROOT, "index.html")));
+app.get("/", (req, res) => { res.set("X-PC-Route", "storefront"); res.sendFile(path.join(ROOT, "index.html")); });
+app.get("/index.html", (req, res) => { res.set("X-PC-Route", "storefront"); res.sendFile(path.join(ROOT, "index.html")); });
 
 app.get("/api/products", (req, res) => {
   res.json(readJson(PRODUCTS_FILE, []));

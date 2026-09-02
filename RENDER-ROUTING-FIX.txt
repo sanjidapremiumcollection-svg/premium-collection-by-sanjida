@@ -1,0 +1,17 @@
+FINAL ROUTING
+/
+  = CUSTOMER STOREFRONT
+/admin
+  = ADMIN LOGIN
+/admin/dashboard
+  = ADMIN DASHBOARD
+
+IMPORTANT FOR RENDER:
+Deploy the CONTENTS of this folder as the Render service root.
+The service must run: node server.js
+After deployment, test:
+https://YOUR-DOMAIN/health
+https://YOUR-DOMAIN/
+https://YOUR-DOMAIN/admin
+
+If / still shows Admin Access after deploying this exact version, the custom domain is pointing to a different/older Render service. Update the custom domain on the Render service that is running this server.
